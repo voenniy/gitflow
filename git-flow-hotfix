@@ -102,7 +102,7 @@ cmd_list() {
 				printf "(no commits yet)"
 			else
 				# local tagname=$(git name-rev --tags --no-undefined --name-only "$base")
-                local tagname="$(date +%Y%m%d_%H:%M:%S)"
+                local tagname="$(date +%Y%m%d_%H%M)_hotfix"
 				local nicename
 				if [ "$tagname" != "" ]; then
 					nicename=$tagname
@@ -289,14 +289,14 @@ cmd_finish() {
 		# in case a previous attempt to finish this release branch has failed,
 		# but the tag was set successful, we skip it now
 		# local tagname=$VERSION_PREFIX$VERSION
-        local tagname="$(date +%Y%m%d_%H:%M:%S)"
+        local tagname="$(date +%Y%m%d_%H%M)_hotfix"
 		if ! git_tag_exists "$tagname"; then
 			local opts="-a"
 			flag sign && opts="$opts -s"
 			[ "$FLAGS_signingkey" != "" ] && opts="$opts -u '$FLAGS_signingkey'"
 			[ "$FLAGS_message" != "" ] && opts="$opts -m '$FLAGS_message'"
 			[ "$FLAGS_messagefile" != "" ] && opts="$opts -F '$FLAGS_messagefile'"
-			eval git_do tag $opts "$VERSION_PREFIX$VERSION" "$BRANCH" || \
+			eval git_do tag $opts "$tagname" "$BRANCH" || \
 			die "Tagging failed. Please run finish again to retry."
 		fi
 	fi
@@ -336,7 +336,7 @@ cmd_finish() {
 	echo "- Latest objects have been fetched from '$ORIGIN'"
 	echo "- Hotfix branch has been merged into '$MASTER_BRANCH'"
 	if noflag notag; then
-		echo "- The hotfix was tagged '$VERSION_PREFIX$VERSION'"
+		echo "- The hotfix was tagged '$tagname'"
 	fi
 	echo "- Hotfix branch has been back-merged into '$DEVELOP_BRANCH'"
 	if flag keep; then
