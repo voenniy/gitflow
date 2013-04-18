@@ -101,7 +101,8 @@ cmd_list() {
 			if [ "$branch_sha" = "$master_sha" ]; then
 				printf "(no commits yet)"
 			else
-				local tagname=$(git name-rev --tags --no-undefined --name-only "$base")
+				# local tagname=$(git name-rev --tags --no-undefined --name-only "$base")
+                local tagname="$(date +%Y%m%d_%H:%M:%S)"
 				local nicename
 				if [ "$tagname" != "" ]; then
 					nicename=$tagname
@@ -287,7 +288,8 @@ cmd_finish() {
 		# try to tag the release
 		# in case a previous attempt to finish this release branch has failed,
 		# but the tag was set successful, we skip it now
-		local tagname=$VERSION_PREFIX$VERSION
+		# local tagname=$VERSION_PREFIX$VERSION
+        local tagname="$(date +%Y%m%d_%H:%M:%S)"
 		if ! git_tag_exists "$tagname"; then
 			local opts="-a"
 			flag sign && opts="$opts -s"
